@@ -1,0 +1,172 @@
+{% load myapptags %}
+{% walletInformation request as walletInfo %}
+
+<style>
+    figure img {
+  width: 100%;
+  height: auto;
+}
+
+.card-box {
+    position: relative;
+    color: #fff;
+    padding: 20px 10px 40px;
+    margin: 20px 0px;
+}
+.card-box:hover {
+    text-decoration: none;
+    color: #f1f1f1;
+}
+.card-box:hover .icon i {
+    font-size: 100px;
+    transition: 1s;
+    -webkit-transition: 1s;
+}
+.card-box .inner {
+    padding: 5px 10px 0 10px;
+}
+.card-box h3 {
+    font-size: 27px;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+    white-space: nowrap;
+    padding: 0;
+    text-align: left;
+}
+.card-box p {
+    font-size: 15px;
+}
+.card-box .icon {
+    position: absolute;
+    top: auto;
+    bottom: 5px;
+    right: 5px;
+    z-index: 0;
+    font-size: 72px;
+    color: rgba(0, 0, 0, 0.15);
+}
+.card-box .card-box-footer {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    text-align: center;
+    padding: 3px 0;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(0, 0, 0, 0.1);
+    width: 100%;
+    text-decoration: none;
+}
+.card-box:hover .card-box-footer {
+    background: rgba(0, 0, 0, 0.3);
+}
+.bg-blue {
+    background-color: #00c0ef !important;
+}
+.bg-green {
+    background-color: #00a65a !important;
+}
+.bg-orange {
+    background-color: #f39c12 !important;
+}
+.bg-red {
+    background-color: #d9534f !important;
+}
+
+
+</style>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-sm-6">
+            <div class="card-box bg-green">
+                <div class="inner">
+                    <h3> ₹{{ walletInfo.userWallet.cashBackTotal|floatformat:-2 }} </h3>
+                    <p> Your Balance </p>
+                </div>
+                <div class="icon">
+                    <i aria-hidden="true" class="fa fa-money"></i>
+                </div>
+                <a class="card-box-footer" href="#">View More <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-sm-6">
+            <div class="card-box bg-blue">
+                <div class="inner">
+                    <h3> ₹{{ walletInfo.rewards|floatformat:-2 }} </h3>
+                    <p> Rewards </p>
+                </div>
+                <div class="icon">
+                    <i aria-hidden="true" class="fa fa-gift"></i>
+                </div>
+                <a class="card-box-footer" href="#">View More <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card-box bg-orange">
+                <div class="inner">
+                    <h3> {{ walletInfo.activeCouponCount }} </h3>
+                    <p> Coupon Active </p>
+                </div>
+                <div class="icon">
+                    <i aria-hidden="true" class="fa fa-tags"></i>
+                </div>
+                <a class="card-box-footer" href="#">View More <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+
+                <div class="card-box" style="background-color:black;">
+                    <div class="inner">
+                        <h3 style="color:white;"> ADD MONEY </h3>
+                        <p style="color:grey;"> 10% cashback on every wallet addition </p>
+                    </div>
+
+                    <div class="icon" style="color:	#808080; opacity:30%;">
+                        <i class="fa fa-plus"></i>
+                    </div>
+                    <a class="card-box-footer" href="#">View More <i class="fa fa-arrow-circle-right"></i></a>
+
+                    <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="modalLoginForm"
+                         role="dialog"
+                         tabindex="-1">
+                        <div class="modal-dialog" role="document"   style="width:500px;">
+                            <Form action="/user/wallet/addmoney/" method="post">
+                            {% csrf_token %}
+                            <div class="modal-content" style="background-color:#000000;">
+                                <div class="modal-header text-center">
+                                    <h4 class="modal-title w-100 font-weight-bold" style="color:white;">Add Amount to Wallet</h4>
+                                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body mx-3">
+                                    <div class="md-form mb-5">
+                                        <i class="fa fa-envelope prefix grey-text"></i>
+                                        <label for="id_transactionAmount" data-error="wrong" data-success="right">Put the
+                                            amount you want to add</label>
+                                        <input id="id_transactionAmount" name="transactionAmount" class="form-control validate" type="number" max="9999" min="10" step="10" style="font-size:40px; height:50px; width:200px; text-align:center;">
+
+                                    </div>
+
+
+                                </div>
+                                <div class="modal-footer d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-default">Pay</button>
+                                </div>
+                            </div>
+                            </Form>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <a class="btn btn-default btn-rounded mb-4" data-target="#modalLoginForm" data-toggle="modal"
+                           href="">Add Amount to Wallet</a>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+</div>
+

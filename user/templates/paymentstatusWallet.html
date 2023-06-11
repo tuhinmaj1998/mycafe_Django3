@@ -1,0 +1,51 @@
+{% extends 'homebase.html' %}
+
+{% block title %} Thanks for Ordering {% endblock %}
+{% block description %} {{ setting.description }} {% endblock %}
+{% block keywords %} {{ setting.keywords }} {% endblock %}
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+
+{% block head %}
+
+
+{% endblock %}
+{% block body %}
+<div class="container">
+    {{response}}
+    <div class="col my-4">
+
+
+        {% if response.RESPCODE == '01' %}
+
+
+
+
+<div class="container">
+	<div class="row text-center">
+        <div class="col-sm-6 col-sm-offset-3">
+        <br><br> <h2 style="color:#0fad00">Success</h2>
+        <img src="{{ request.session.userimage }}" style="height:60px; width:60px; border-radius:50%; object-fit: cover; " >
+        <h3>Dear, {{user_name}}</h3>
+        <p style="font-size:20px;color:#5C5C5C;">Your Wallet amount has been updated</p>
+        <a href="/user/wallet/" class="btn btn-success">    Check my Order    </a>
+    <br><br>
+        </div>
+
+	</div>
+</div>
+        {% else %}
+
+
+
+
+
+        ORDER FAILURE
+        {% endif%}
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+

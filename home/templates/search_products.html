@@ -1,0 +1,381 @@
+{% extends 'homebase.html' %}
+
+{% block title %}  {{ query }} results {% endblock %}
+{% block description %} {{setting.description}} {% endblock %}
+{% block keywords %} {{setting.keywords}} {% endblock %}
+
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+{% block body %}
+
+<!-- BREADCRUMB -->
+	<div id="breadcrumb">
+		<div class="container">
+			<ul class="breadcrumb">
+				<li><a href="/home">Home</a></li>
+				<li class="active">Search</li>
+			</ul>
+		</div>
+	</div>
+	<!-- /BREADCRUMB -->
+
+<!-- section -->
+	<div class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<!-- ASIDE -->
+				<div id="aside" class="col-md-3">
+
+					<!-- aside widget -->
+					<div class="aside">
+						<h3 class="aside-title">You recently searched</h3>
+						<!-- widget product -->
+						<div class="product product-widget">
+							<div class="product-thumb">
+								<img src="./img/thumb-product01.jpg" alt="">
+							</div>
+							<div class="product-body">
+								<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
+								<h3 class="product-price">$32.50 <del class="product-old-price">$45.00</del></h3>
+								<div class="product-rating">
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star-o empty"></i>
+								</div>
+							</div>
+						</div>
+						<!-- /widget product -->
+
+					</div>
+					<!-- /aside widget -->
+
+
+
+
+
+
+
+					<!-- aside widget -->
+					<div class="aside">
+						<h3 class="aside-title">Top Rated Product</h3>
+						<!-- widget product -->
+						<div class="product product-widget">
+							<div class="product-thumb">
+								<img src="./img/thumb-product01.jpg" alt="">
+							</div>
+							<div class="product-body">
+								<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
+								<h3 class="product-price">$32.50 <del class="product-old-price">$45.00</del></h3>
+								<div class="product-rating">
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star-o empty"></i>
+								</div>
+							</div>
+						</div>
+						<!-- /widget product -->
+
+
+					</div>
+					<!-- /aside widget -->
+
+
+
+				</div>
+				<!-- /ASIDE -->
+
+				<!-- MAIN -->
+				<div id="main" class="col-md-9">
+					<!-- store top filter -->
+					<div class="store-filter clearfix">
+						<div class="pull-left">
+							<div class="row-filter">
+								<a href="#"><i class="fa fa-th-large"></i></a>
+								<a href="#" class="active"><i class="fa fa-bars"></i></a>
+							</div>
+							<div class="sort-filter">
+								<span class="text-uppercase">Sort By:</span>
+								<select class="input">
+										<option value="0">Position</option>
+										<option value="0">Price</option>
+										<option value="0">Rating</option>
+									</select>
+								<a href="#" class="main-btn icon-btn"><i class="fa fa-arrow-down"></i></a>
+							</div>
+						</div>
+						<div class="pull-right">
+							<div class="page-filter">
+								<span class="text-uppercase">Show:</span>
+								<select class="input">
+										<option value="0">10</option>
+										<option value="1">20</option>
+										<option value="2">30</option>
+									</select>
+							</div>
+							<ul class="store-pages">
+								<li><span class="text-uppercase">Page:</span></li>
+								<li class="active">1</li>
+								<li><a href="#">2</a></li>
+								<li><a href="#">3</a></li>
+								<li><a href="#"><i class="fa fa-caret-right"></i></a></li>
+							</ul>
+						</div>
+					</div>
+					<!-- /store top filter -->
+
+					<!-- STORE -->
+					<div id="store">
+						<!-- row -->
+						<div class="row">
+							<!-- Product Single -->
+
+							<div class="clearfix visible-sm visible-xs"></div>
+    {% for rs in products %}
+							{% if rs.variant != 'None' %}
+				{% for vw in variant %}
+				{% if rs.id == vw.product_id %}
+				<!-- Product Single -->
+				<div class="col-md-4 col-sm-6 col-xs-6" style="height:400px;">
+					<div class="product product-single">
+						<div class="product-thumb">
+							<a href="/product/{{ rs.id }}/{{ rs.slug }}" class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</a>
+							 {% if vw.image_id > 0 %}
+                                    <img alt="" src="{{vw.image }}" style=" height: 200px; object-fit: cover;" >
+                                    {% else %}
+                                    <img alt="" src="{{rs.image.url}}" style=" height: 200px; object-fit: cover;">
+                                    {% endif %}
+						</div>
+						<div class="product-body">
+							<h3 class="product-price">{{vw.price}}</h3>
+							<div class="product-rating">
+								<div class="product-rating">
+								<i class="fa fa-star{% if rs.avaregereview < 1 %}-o empty{% endif %}"></i>
+                                <i class="fa fa-star{% if rs.avaregereview < 2 %}-o empty{% endif %}"></i>
+                                <i class="fa fa-star{% if rs.avaregereview < 3 %}-o empty{% endif %}"></i>
+                                <i class="fa fa-star{% if rs.avaregereview < 4 %}-o empty{% endif %}"></i>
+                                <i class="fa fa-star{% if rs.avaregereview < 5 %}-o empty{% endif %}"></i>
+							</div>
+							</div>
+							<h2 class="product-name"><a href="/product/{{ rs.id }}/{{ rs.slug }}">{{rs.title}}</a></h2>
+							{% if vw.size != None and vw.color != None %}<h5> Size: {{ vw.size }} | Color: {{ vw.color }} {% endif %}</h5>
+							{% if vw.size != None and vw.color == None %}<h5> Size: {{ vw.size }} {% endif %}</h5>
+							{% if vw.size == None and vw.color != None %}<h5> Color: {{ vw.color }} {% endif %}</h5>
+							<div class="product-btns">
+
+								<form action="/product/addtowishlist/{{ rs.id }}/" id="addwishlist-form" method="post" style="display: inline;">
+									<input type="hidden" name="checked" id="checked" value="True">
+									<input type="hidden" name="variantid" id="variantid" value="{{ vw.id }}">
+									{% csrf_token %}
+
+								{% for xy in wishlist %}
+								{% if xy.product_id == rs.id and xy.variant_id == vw.id %}
+									{% with  m="m" %}
+
+
+
+									<button type="submit" id="btn1{{xy.id}}" class="main-btn icon-btn primary-btn"><i class="fa fa-heart"></i></button>
+									<!--body onload="hideButton()"></body-->
+
+
+									{% endwith %}
+									{% endif %}
+									{% endfor %}
+
+
+									<button type="submit" id="btn6{{vw.id}}" class="main-btn icon-btn abc"><i class="fa fa-heart-o empty"></i></button>
+
+
+								</form>
+
+
+
+								<!--button class="main-btn icon-btn"><i class="fa fa-exchange"></i></1button-->
+
+
+								<form action="/order/addtoshopcart/{{ rs.id }}" method="post"  id="addchart-form"style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="variantid" id="variantid1" value="{{ vw.id }}">
+									{% for tu in myshopcart %}
+									{% if tu.product == rs and tu.variant == vw %}
+									<input class="input main-btn icon-btn" name="quantity" type="number" value= {% if tu.quantity == 0 %}"0" {% else %}"{{tu.quantity}}" {% endif %} min="1" max={% if tu.product.variant != 'None' %}"{{ tu.variant.quantity }}" {% else %} "{{ tu.product.amount }}"{% endif %}>
+									{% else %}
+									<input type="hidden" name="quantity" id="quantity" value="1">
+									{% endif %}
+									{% endfor %}
+									<button type="submit"  {% if vw.quantity < 1 or rs.amount < 1  %} disabled {% endif %} class="primary-btn add-to-cart">
+									<i class="fa fa-shopping-cart"></i> Add to Cart</button>
+
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Product Single -->
+				{% endif %}
+				{% endfor %}
+			{% else %}
+				<!-- Product Single -->
+				<div class="col-md-4 col-sm-6 col-xs-6" style="height:400px;">
+					<div class="product product-single">
+						<div class="product-thumb">
+							<a href="/product/{{ rs.id }}/{{ rs.slug }}" class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</a>
+							<img src="{{rs.image.url}}" alt="" style=" height: 200px;object-fit: cover;">
+						</div>
+						<div class="product-body">
+							<h3 class="product-price">{{rs.price}}</h3>
+							<div class="product-rating">
+								<div class="product-rating">
+								<i class="fa fa-star{% if rs.avaregereview < 1 %}-o empty{% endif %}"></i>
+                                <i class="fa fa-star{% if rs.avaregereview < 2 %}-o empty{% endif %}"></i>
+                                <i class="fa fa-star{% if rs.avaregereview < 3 %}-o empty{% endif %}"></i>
+                                <i class="fa fa-star{% if rs.avaregereview < 4 %}-o empty{% endif %}"></i>
+                                <i class="fa fa-star{% if rs.avaregereview < 5 %}-o empty{% endif %}"></i>
+							</div>
+							</div>
+							<h2 class="product-name"><a href="#">{{rs.title}}</a></h2>
+							<div class="product-btns">
+
+								<form action="/product/addtowishlist/{{ rs.id }}/" id="addwishlist-form" method="post" style="display: inline;">
+									<input type="hidden" name="checked" id="checked" value="True">
+
+									{% csrf_token %}
+
+								{% for xy in wishlist %}
+								{% if xy.product_id == rs.id %}
+									{% with  m="m" %}
+
+
+
+									<button type="submit" id="btn3{{xy.id}}" class="main-btn icon-btn primary-btn"><i class="fa fa-heart"></i></button>
+
+
+
+
+									{% endwith %}
+									{% endif %}
+									{% endfor %}
+
+
+									<button type="submit" id="btn8{{rs.id}}" class="main-btn icon-btn abc"><i class="fa fa-heart-o empty"></i></button>
+
+
+								</form>
+
+
+								<form action="/order/addtoshopcart/{{ rs.id }}" method="post"  id="addchart-form"style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="variantid" id="variantid" value="{{ vw.id }}">
+									{% for tu in myshopcart %}
+									{% if tu.product == rs and tu.variant == vw %}
+									<input class="input main-btn icon-btn" name="quantity" type="number" value= {% if tu.quantity == 0 %}"0" {% else %}"{{tu.quantity}}" {% endif %} min="1" max={% if tu.product.variant != 'None' %}"{{ tu.variant.quantity }}" {% else %} "{{ tu.product.amount }}"{% endif %}>
+									{% else %}
+									<input type="hidden" name="quantity" id="quantity" value="1">
+									{% endif %}
+									{% endfor %}
+									<button type="submit"  {% if vw.quantity < 1 or rs.amount < 1  %} disabled {% endif %} class="primary-btn add-to-cart">
+									<i class="fa fa-shopping-cart"></i> Add to Cart</button>
+
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Product Single -->
+				{% endif %}
+        {% endfor %}
+						</div>
+						<!-- /row -->
+					</div>
+					<!-- /STORE -->
+
+					<!-- store bottom filter -->
+					<div class="store-filter clearfix">
+						<div class="pull-left">
+							<div class="row-filter">
+								<a href="#"><i class="fa fa-th-large"></i></a>
+								<a href="#" class="active"><i class="fa fa-bars"></i></a>
+							</div>
+							<div class="sort-filter">
+								<span class="text-uppercase">Sort By:</span>
+								<select class="input">
+										<option value="0">Position</option>
+										<option value="0">Price</option>
+										<option value="0">Rating</option>
+									</select>
+								<a href="#" class="main-btn icon-btn"><i class="fa fa-arrow-down"></i></a>
+							</div>
+						</div>
+						<div class="pull-right">
+							<div class="page-filter">
+								<span class="text-uppercase">Show:</span>
+								<select class="input">
+										<option value="0">10</option>
+										<option value="1">20</option>
+										<option value="2">30</option>
+									</select>
+							</div>
+							<ul class="store-pages">
+								<li><span class="text-uppercase">Page:</span></li>
+								<li class="active">1</li>
+								<li><a href="#">2</a></li>
+								<li><a href="#">3</a></li>
+								<li><a href="#"><i class="fa fa-caret-right"></i></a></li>
+							</ul>
+						</div>
+					</div>
+					<!-- /store bottom filter -->
+				</div>
+				<!-- /MAIN -->
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /section -->
+
+<script>
+
+		function hideButton(){
+		//alert("Page is loaded");
+		{% for ab in wishlist %}
+
+			 //console.log({{ab.variant_id}});
+			 var None = 0;
+			 if ({{ab.variant_id}}  != 0) {
+
+
+				 try{
+				 	document.getElementById("btn6{{ab.variant_id}}").style.display ="none";
+				 }
+				 catch(err) {
+				 }
+
+
+
+			 }
+			 else if({{ab.product_id}} != 'None'){
+
+
+
+				 try{
+				 	document.getElementById("btn8{{ab.product_id}}").style.display ="none";
+				 }
+				 catch(err) {
+				 }
+
+
+
+			 }
+		 {% endfor %}
+
+		}
+		 window.onload = hideButton;
+
+</script>
+
+{% endblock %}

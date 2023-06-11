@@ -1,0 +1,94 @@
+{% extends 'homebase.html' %}
+
+{% block title %} Order List {% endblock %}
+{% block description %} {{ setting.description }} {% endblock %}
+{% block keywords %} {{ setting.keywords }} {% endblock %}
+
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+
+{% block body %}
+
+
+
+
+
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active">Wallet</li>
+        </ul>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
+<!-- section -->
+
+
+{% include "user_panel_horizontal.html" %}
+
+
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-3">
+                {% include "user_panel.html" %}
+            </div>
+
+
+
+            <div class="col-md-9">
+                <div class="order-summary clearfix">
+                    <div class="section-title">
+                        <h3 class="title">My Address</h3>
+                    </div>
+
+
+                    {% for rs in userAddress %}
+
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card-box" style="background-color:{{ rs.color }}; height:250px;">
+                            <div class="inner">
+                                <a href="#"> <h4> {{ rs.title }} </h4></a>
+                                <p> {{rs.locationAddress}} </p>
+                            </div>
+                            <div class="icon">
+                                <i aria-hidden="true" class="fa fa-home"></i>
+                            </div>
+                            <a class="card-box-footer" href="#">Edit<i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+
+
+
+                   <div class="col-lg-3 col-sm-6">
+                        <div class="card-box" style="background-color:grey; height:250px;">
+                            <div class="inner">
+                                <a href="{% url 'addNewAddress'%}?next={{ request.path|urlencode }}"> <h3> Add New </h3></a>
+                                <p> Save new frequently used address </p>
+                            </div>
+                            <div class="icon">
+                                <i aria-hidden="true" class="fa fa-plus"></i>
+                            </div>
+                            <a class="card-box-footer" href="#">View More<i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /section -->
+
+
+{% endblock %}

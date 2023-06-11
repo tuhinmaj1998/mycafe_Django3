@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>autosuggestuiHTML</title>
+        <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
+        <style type='text/css'>body{margin:0;padding:0;overflow:hidden;font-family:'Segoe UI',Helvetica,Arial,Sans-Serif}</style>
+    </head>
+    <body>
+    <div class="container">
+
+                <div id='searchBoxContainer'><input type= 'text' id= 'searchBox'/></div>
+                <div id='printoutPanel'></div>
+                <div id='myMap' style='width: 500px; height: 500px;'></div>
+
+
+    </div>
+
+
+
+
+
+        <script type='text/javascript'>
+            function loadMapScenario() {
+                var map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
+                    /* No need to set credentials if already passed in URL */
+                    center: new Microsoft.Maps.Location(22.5726, 88.3639),
+                    zoom: 12
+                });
+                Microsoft.Maps.loadModule('Microsoft.Maps.AutoSuggest', function () {
+                    var options = {
+                        maxResults: 4,
+                        map: map
+                    };
+                    var manager = new Microsoft.Maps.AutosuggestManager(options);
+                    manager.attachAutosuggest('#searchBox', '#searchBoxContainer', selectedSuggestion);
+                });
+                function selectedSuggestion(suggestionResult) {
+                    map.entities.clear();
+                    map.setView({ bounds: suggestionResult.bestView });
+                    var pushpin = new Microsoft.Maps.Pushpin(suggestionResult.location);
+                    map.entities.push(pushpin);
+                    document.getElementById('printoutPanel').innerHTML =
+                        'Suggestion: ' + suggestionResult.formattedSuggestion +
+                            '<br> Lat: ' + suggestionResult.location.latitude +
+                            '<br> Lon: ' + suggestionResult.location.longitude;
+                }
+
+            }
+        </script>
+        <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=AiGA41BLOBd4YOM8RLBkgIMSD4ic99CKEF2A5xZyFXA6l6vvNli-3MDaisLf5kVl&callback=loadMapScenario' async defer></script>
+    </body>
+</html>
+

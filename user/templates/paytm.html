@@ -1,0 +1,38 @@
+{% extends 'homebase.html' %}
+
+{% block title %} Processing Payment... {% endblock %}
+{% block description %} {{ setting.description }} {% endblock %}
+{% block keywords %} {{ setting.keywords }} {% endblock %}
+
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <br><br>
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <p>Redirecting to payment page</p>
+        <p>Please do not refresh your page</p>
+        <hr>
+        <form action="https://securegw-stage.paytm.in/theia/processTransaction" method="post" name="paytm">
+            {% for key, value in param_dict.items %}
+            <input name="{{key}}" type="hidden" value="{{value}}">
+            {% endfor %}
+        </form>
+        <br><br>
+
+    </div>
+
+
+</div>
+
+<script>
+		document.paytm.submit()
+
+</script>
+
+{% endblock %}
+
+

@@ -1,0 +1,170 @@
+{% extends 'homebase.html' %}
+
+{% block title %}  {{ query }} My WishList {% endblock %}
+{% block description %} {{setting.description}} {% endblock %}
+{% block keywords %} {{setting.keywords}} {% endblock %}
+
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+{% block body %}
+
+<!-- BREADCRUMB -->
+	<div id="breadcrumb">
+		<div class="container">
+			<ul class="breadcrumb">
+				<li><a href="/home">Home</a></li>
+				<li class="active">Wish List</li>
+			</ul>
+		</div>
+	</div>
+	<!-- /BREADCRUMB -->
+
+<!-- section -->
+{% include "user_panel_horizontal.html" %}
+
+
+
+<div class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+            <div class="col-md-3">
+                {% include "user_panel.html" %}
+            </div>
+
+            <div class="col-md-9">
+
+				<h2>My Favourites</h2>
+				<!-- MAIN -->
+				<div id="main" class="col-md-12">
+
+
+					<!-- STORE -->
+					<div id="store">
+						<!-- row -->
+						<div class="row">
+							<!-- Product Single -->
+
+							<div class="clearfix visible-sm visible-xs"></div>
+    {% for rs in wishlist %}
+							<!-- Product Single -->
+
+						<div class="col-md-6 col-sm-6 col-xs-6">
+					<div class="product product-single" style="height:100%; width:100%;">
+						<div class="product-thumb">
+							<div class="product-label">
+										<span>New</span>
+
+										{% for dp in discountP %}
+											{% if dp.product_id == rs.product_id and dp.variant_id == rs.variant_id and dp.discountPercent > 0 %}
+										<span class="sale">-{{ dp.discountPercent }}%</span>
+											{% endif %}
+										{% endfor %}
+									</div>
+									{% for dp in discountP %}
+											{% if dp.product_id == rs.product_id and dp.variant_id == rs.variant_id and dp.discountPercent > 0 %}
+
+
+									<ul class="product-countdown">
+										<li><span>{{ dp.expiryDay }} Day</span></li>
+										<li><span>{{ dp.expiryHour }} Hour</span></li>
+									</ul>
+
+									{% endif %}
+										{% endfor %}
+							<a href="/product/{{ rs.product.id }}/{{ rs.product.slug }}" class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</a>
+
+                                    {% if rs.variant.image_id > 0 %}
+                                    <img alt="" src="{{rs.variant.image }}" style=" height: 200px; object-fit: cover;" >
+                                    {% else %}
+                                    <img alt="" src="{{rs.product.image.url}}" style=" height: 200px; object-fit: cover;">
+                                    {% endif %}
+
+						</div>
+						<div class="product-body">
+							<h3 class="product-price">
+
+										{% for dp in discountP %}
+											{% if dp.product_id == rs.product_id and dp.variant_id == rs.variant_id %}
+										<del class="product-old-price">
+											{% else %}
+											<span>
+												{% endif %}
+												{% endfor %}
+
+											₹{% if rs.variant != None %}{{ rs.variant.price }}{% else %}{{ rs.product.price }}{% endif %}
+										</del>
+										{% for dp in discountP %}
+											{% if dp.product_id == rs.product_id and dp.variant_id == rs.variant_id %}
+										<span>₹{{ dp.DiscountPrice }}
+
+										</span>
+										{% endif %}
+										{% endfor %}
+									</h3>
+							<div class="product-rating">
+								<i class="fa fa-star{% if rs.product.avaregereview < 1 %}-o empty{% endif %}"></i>
+                                <i class="fa fa-star{% if rs.product.avaregereview < 2 %}-o empty{% endif %}"></i>
+                                <i class="fa fa-star{% if rs.product.avaregereview < 3 %}-o empty{% endif %}"></i>
+                                <i class="fa fa-star{% if rs.product.avaregereview < 4 %}-o empty{% endif %}"></i>
+                                <i class="fa fa-star{% if rs.product.avaregereview < 5 %}-o empty{% endif %}"></i>
+							</div>
+							<h2 class="product-name"><a href="#">{{ rs.product.title }}</a></h2>
+							<div class="product-btns">
+								<form action="/product/addtowishlist/{{ rs.product.id }}/" id="addwishlist-form" method="post" style="display: inline;">
+									<input type="hidden" name="checked" id="checked" value="{{ rs.checked }}">
+									<input type="hidden" name="variantid" id="variantid" value="{{ rs.variant.id }}">
+									{% csrf_token %}
+
+									<button type="submit"  class="{% if rs.checked is not True %}main-btn icon-btn{% else %} primary-btn{% endif %}"><i class="fa fa-heart{% if rs.checked is not True %}-o empty{% endif %}"></i></button>
+
+								</form>
+								<!--button class="main-btn icon-btn"><i class="fa fa-exchange"></i></1button-->
+
+								<form action="/order/addtoshopcart/{{ rs.product.id }}" method="post"  id="addchart-form"style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="variantid" id="variantid1" value="{{ rs.variant.id }}">
+									{% if myshopcart %}
+
+
+
+                                    {% for tu in myshopcart %}
+									{% if tu.product == rs.product and tu.variant == rs.variant %}
+									<input class="input main-btn icon-btn" name="quantity" type="number" value= {% if tu.quantity == 0 %}"0" {% else %}"{{tu.quantity}}" {% endif %} min="1" max={% if tu.product.variant != 'None' %}"{{ tu.variant.quantity }}" {% else %} "{{ tu.product.amount }}"{% endif %}>
+									{% else %}
+									<input type="hidden" name="quantity" id="quantity" value="1">
+									{% endif %}
+									{% endfor %}
+
+
+                                    {% else %}
+                                    <input type="hidden" name="quantity" id="quantity" value="1">
+
+
+                                    {% endif %}
+                                    <button type="submit"  {% if rs.variant.quantity < 1 or rs.product.amount < 1  %} disabled {% endif %} class="primary-btn add-to-cart">
+									<i class="fa fa-shopping-cart"></i> Add to Cart</button>
+
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+							<!-- /Product Single -->
+        {% endfor %}
+						</div>
+						<!-- /row -->
+					</div>
+					<!-- /STORE -->
+
+
+				</div>
+				<!-- /MAIN -->
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /section -->
+
+{% endblock %}

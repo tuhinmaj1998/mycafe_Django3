@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        {% load static %}
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Dashboard - SB Admin</title>
+        <link href="{% static '' %}css/dashstyles.css" rel="stylesheet" />
+        <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
+
+    </head>
+
+
+                <body>
+                    <div class="container">
+                        <h1 class="mt-4">Dashboard</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">Dashboard</li>
+                        </ol>
+
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table mr-1"></i>
+                                DataTable Example
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Table</th>
+                                                <th>Choose Time Slot</th>
+                                                <th>Choose Date</th>
+                                                <th>Special Day?</th>
+                                                <th>Book Table</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Table</th>
+                                                <th>Choose Time Slot</th>
+                                                <th>Choose Date</th>
+                                                <th>Special Day?</th>
+                                                <th>Book Table</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                        {% for rs in tables %}
+
+                                            <tr>
+                                                <td>
+                                                     <img src="{{ rs.image.url }}" style=" height: 200px; width:300px; object-fit: cover;"><br><br><h4 >{{ rs.title }} ({{ rs.seat }})</h4>
+                                                </td>
+                                                <td>
+                                                      <select class="custom-select" id="timeSelect">
+                                                        <option selected>Choose...</option>
+                                                        {% for tu in time_tables %}
+                                                          {% if rs.id == tu.parent_table_id %}
+                                                        <option value="{{ tu.id }}">{{ tu.title }} ({{ tu.hour_selection }} hrs.)</option>
+                                                          {% endif %}
+                                                        {% endfor %}
+
+                                                      </select>
+                                                </td>
+
+                                                <td>
+                                                    <select class="custom-select" id="DateSelect">
+                                                        <option selected>Choose...</option>
+                                                        <option value="1">Lone Wolf Master</option>
+
+                                                      </select>
+                                                </td>
+                                                <td><select class="custom-select" id="occasionSelect">
+                                                        <option selected>Choose...</option>
+                                                        <option value="1">Lone Wolf</option>
+
+                                                      </select>
+                                                </td>
+                                                <td><a href="#" class="btn btn-success">Submit</a></td>
+                                            </tr>
+
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+                <script src="{% static '' %}js/dashscripts.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+                <script src="{% static '' %}demo/chart-area-demo.js"></script>
+                <script src="{% static '' %}demo/chart-bar-demo.js"></script>
+                <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+                <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+                <script src="{% static '' %}demo/datatables-demo.js"></script>
+                </body>
+
+
+</html>
+
+

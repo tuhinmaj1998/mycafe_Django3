@@ -1,0 +1,141 @@
+{% extends 'homebase.html' %}
+
+{% block title %} Order List {% endblock %}
+{% block description %} {{ setting.description }} {% endblock %}
+{% block keywords %} {{ setting.keywords }} {% endblock %}
+
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+
+{% block body %}
+
+
+
+
+
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active">Wallet</li>
+        </ul>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
+<!-- section -->
+
+
+{% include "user_panel_horizontal.html" %}
+
+
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-3">
+                {% include "user_panel.html" %}
+            </div>
+
+            <div class="col-md-9">
+                <div class="order-summary clearfix">
+                    <div class="section-title">
+                        <h3 class="title">My Wallet Transaction</h3>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <th>Id</th>
+                            <th>Amount</th>
+                            <th>Status Sign</th>
+                            <th>Date</th>
+                            <th>Details</th>
+                        </tr>
+
+                        {% for rs in userWalletTransaction %}
+                        <tr class="divide">
+                            <td>{{ rs.code}}</td>
+                            <td>{{ rs.transactionAmount }}</td>
+                            <td>
+                               {% if rs.status == 'Paid' %} <span class="badge progress-bar-danger"> {{ rs.status }}</span>{% endif %}
+                               {% if rs.status == 'Received' %} <span class="badge progress-bar-success"> {{ rs.status }}</span>{% endif %}
+                               {% if rs.status == 'Failed' %} <span class="badge progress-bar-secondary"> {{ rs.status }}</span>{% endif %}
+                               {% if rs.status == 'CashBackApplied' %} <span class="badge progress-bar-warning"> {{ rs.status }}</span>{% endif %}
+                               {% if rs.status == 'WalletGift' %} <span class="badge progress-bar-info"> {{ rs.status }}</span>{% endif %}
+                            </td>
+                            <td>{{ rs.timeIssued }}</td>
+                            <td>
+                                <p>
+                                    <button aria-controls="collapseExample" aria-expanded="false"
+                                            class="btn primary-btn" data-target=".collapse{{rs.id}}" data-toggle="collapse"
+                                            role="button">
+                                        +
+                                    </button>
+
+
+                                </p>
+                            </td>
+
+                        </tr>
+
+                        <tr class="divide collapse collapse{{rs.id}}">
+
+                            <td>
+                                <div class="collapse collapse{{rs.id}}" id="collapse1{{rs.id}}">
+                                    <div class="card card-body">
+                                        Transaction Id: {{ rs.TXNID }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="collapse collapse{{rs.id}}" id="collapse2{{rs.id}}">
+                                    <div class="card card-body">
+                                        Order Id: {{ rs.code }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="collapse collapse{{rs.id}}" id="collapse3{{rs.id}}">
+                                    <div class="card card-body">
+                                        Mode of Transaction: {{ rs.GATEWAYNAME }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="collapse collapse{{rs.id}}" id="collapse4{{rs.id}}">
+                                    <div class="card card-body">
+                                        Bank: {{ rs.BANKNAME }}<br>
+
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="collapse collapse{{rs.id}}" id="collapse5{{rs.id}}">
+                                    <div class="card card-body">
+                                        Bank Transaction Id: {{ rs.BANKTXNID }}
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+
+
+                        {% endfor %}
+
+                    </table>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /section -->
+
+
+{% endblock %}

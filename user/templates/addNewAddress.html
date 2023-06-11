@@ -1,0 +1,159 @@
+{% extends 'homebase.html' %}
+
+{% block title %} Order List {% endblock %}
+{% block description %} {{ setting.description }} {% endblock %}
+{% block keywords %} {{ setting.keywords }} {% endblock %}
+
+
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+
+{% block body %}
+
+
+<style>
+    input, textarea{
+        padding-left:10px;
+        width:250px;
+        height:30px;
+    }
+
+    textarea{
+        height:90px;
+    }
+
+</style>
+
+
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active">Wallet</li>
+        </ul>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
+<!-- section -->
+
+
+{% include "user_panel_horizontal.html" %}
+
+
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-3">
+                {% include "user_panel.html" %}
+            </div>
+
+            <div class="col-md-3" style="margin-top:80px;">
+                <div id='searchBoxContainer'>
+                    <h4>Search Location</h4>
+                    <input type= 'text'  id= 'searchBox' placeholder="Enter a location to search"/>
+                </div>
+                <br>
+                <div id='printoutPanel'></div>
+                <br><br>
+
+            </div>
+
+            <div class="col-md-6" style="margin-top:80px;">
+                <div id='myMap' style='width: 500px; height: 500px;'></div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /section -->
+
+<script type='text/javascript'>
+            function loadMapScenario() {
+                var map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
+                    /* No need to set credentials if already passed in URL */
+                    center: new Microsoft.Maps.Location(22.5726, 88.3639),
+                    zoom: 12
+                });
+
+
+                Microsoft.Maps.loadModule('Microsoft.Maps.AutoSuggest', function () {
+                    var options = {
+                        maxResults: 4,
+                        map: map
+                    };
+                    var manager = new Microsoft.Maps.AutosuggestManager(options);
+                    manager.attachAutosuggest('#searchBox', '#searchBoxContainer', selectedSuggestion);
+                });
+
+
+
+
+                function selectedSuggestion(suggestionResult) {
+                    map.entities.clear();
+                    map.setView({ bounds: suggestionResult.bestView });
+                    var pushpin = new Microsoft.Maps.Pushpin((suggestionResult.location), { draggable: true });
+                    map.entities.push(pushpin);
+
+                    Microsoft.Maps.Events.addHandler(pushpin, 'drag', function (e) { highlight('latDisplay', e); });
+
+                    function highlight(id, event) {
+                        document.getElementById('latDisplay').innerText =  event.target.getLocation().latitude;
+                        document.getElementById('longDisplay').innerText =  event.target.getLocation().longitude;
+                        //document.getElementById('title').value =  event.target;
+                            }
+
+
+
+                    //alert(suggestionResult.address);
+
+
+
+                    document.getElementById('printoutPanel').innerHTML =
+                    '<form method="post" action="{% url 'addNewAddress' %}">{% csrf_token %}'+
+                    `<h5>Title*</h5>
+                    <input type= "text" name="title" id= "title" placeholder="Enter Title" required/>
+                <p/>
+                <h5>House No.</h5>
+                    <input type= "text" name="houseNo" id= "houseNo" placeholder="Enter house no."/>
+                <p/>
+                <h5>Description</h5>
+                <textarea name="description" id= "description" placeholder="Enter a short description">
+                </textarea><br>`+
+                        suggestionResult.formattedSuggestion +
+                            '<br> Lat: <span id=latDisplay>' + suggestionResult.location.latitude + '</span>' +
+                            '<br> Lon: <span id=longDisplay>' + suggestionResult.location.longitude + '</span>' +
+                            '<input type= "hidden" name="latitude" id= "latitude"/>'+
+                            '<input type= "hidden" name="longitude" id= "longitude"/>'+
+                            '<input type= "hidden" name="locationAddress" id= "locationAddress"/>'+
+                            '<input type="hidden" name="path" value="{{ request.GET.next }}">'+
+                            '<br><button class="btn btn-primary" type="submit">Save this address</button></form>';
+
+                            document.getElementById('latitude').value = suggestionResult.location.latitude;
+                            document.getElementById('longitude').value = suggestionResult.location.longitude;
+                            document.getElementById('locationAddress').value = suggestionResult.formattedSuggestion;
+
+                }
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+        </script>
+        <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=AiGA41BLOBd4YOM8RLBkgIMSD4ic99CKEF2A5xZyFXA6l6vvNli-3MDaisLf5kVl&callback=loadMapScenario' async defer></script>
+
+
+
+{% endblock %}

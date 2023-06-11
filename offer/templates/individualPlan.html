@@ -1,0 +1,399 @@
+{% extends 'homebase.html' %}
+
+{% block title %}  Plan | {{ select_planDuration.title }} {% endblock %}
+{% block description %} {{setting.description}} {% endblock %}
+{% block keywords %} {{setting.keywords}} {% endblock %}
+
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+
+
+{% block body %}
+{% load mathfilters %}
+<style>
+  body {
+  font-family: 'Karla', sans-serif; }
+
+.pricing-table-subtitle {
+  margin-top: 68px;
+  font-weight: normal; }
+
+.pricing-table-title {
+  font-weight: bold;
+  margin-bottom: 68px; }
+
+.pricing-card {
+  border: none;
+  border-radius: 10px;
+  margin-bottom: 40px;
+  text-align: center;
+  -webkit-transition: all 0.6s;
+  transition: all 0.6s; }
+  .pricing-card:hover {
+    box-shadow: 0 2px 40px 0 rgba(205, 205, 205, 0.55); }
+  .pricing-card.pricing-card-highlighted {
+    box-shadow: 0 2px 40px 0 rgba(205, 205, 205, 0.55); }
+  .pricing-card:hover {
+    box-shadow: 0 2px 40px 0 rgba(205, 205, 205, 0.55);
+    -webkit-transform: translateY(-10px);
+            transform: translateY(-10px); }
+  .pricing-card .card-body {
+    padding-top: 55px;
+    padding-bottom: 62px; }
+
+.pricing-plan-title {
+  font-size: 20px;
+  color: #000;
+  margin-bottom: 11px;
+  font-weight: normal; }
+
+.pricing-plan-cost {
+  font-size: 50px;
+  color: #000;
+  font-weight: bold;
+  margin-bottom: 29px; }
+
+.pricing-plan-icon {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  font-size: 40px;
+  line-height: 1;
+  margin-bottom: 24px; }
+  .pricing-plan-basic .pricing-plan-icon {
+    color: #fe397a; }
+  .pricing-plan-pro .pricing-plan-icon {
+    color: #10bb87; }
+  .pricing-plan-enterprise .pricing-plan-icon {
+    color: #5d78ff; }
+
+.pricing-plan-features {
+  list-style: none;
+  padding-left: 0;
+  font-size: 14px;
+  line-height: 2.14;
+  margin-bottom: 35px;
+  color: #303132; }
+
+.pricing-plan-purchase-btn {
+  color: #000;
+  font-size: 16px;
+  font-weight: bold;
+  width: 145px;
+  height: 45px;
+  border-radius: 22.5px;
+  -webkit-transition: all 0.4s;
+  transition: all 0.4s;
+  position: relative;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+          align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-box-pack: center;
+          justify-content: center; }
+  .pricing-plan-basic .pricing-plan-purchase-btn {
+    background-color: #fe397a;
+    color: #fff; }
+    .pricing-plan-basic .pricing-plan-purchase-btn:hover {
+      box-shadow: 0 3px 0 0 #b7013d; }
+    .pricing-plan-basic .pricing-plan-purchase-btn:active {
+      -webkit-transform: translateY(3px);
+              transform: translateY(3px);
+      box-shadow: none; }
+  .pricing-plan-pro .pricing-plan-purchase-btn {
+    background-color: #10bb87;
+    color: #fff; }
+    .pricing-plan-pro .pricing-plan-purchase-btn:hover {
+      box-shadow: 0 3px 0 0 #0a7554; }
+    .pricing-plan-pro .pricing-plan-purchase-btn:active {
+      -webkit-transform: translateY(3px);
+              transform: translateY(3px);
+      box-shadow: none; }
+  .pricing-plan-enterprise .pricing-plan-purchase-btn {
+    background-color: #5d78ff;
+    color: #fff; }
+    .pricing-plan-enterprise .pricing-plan-purchase-btn:hover {
+      box-shadow: 0 3px 0 0 #1138ff; }
+    .pricing-plan-enterprise .pricing-plan-purchase-btn:active {
+      -webkit-transform: translateY(3px);
+              transform: translateY(3px);
+      box-shadow: none; }
+
+
+</style>
+
+
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/offer/plans/">Plans</a></li>
+            <li class="active">{{ plans.title }}</li>
+
+        </ul>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
+<!-- section -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+
+                <div class="col-md-7">
+                    <div class="billing-details">
+
+                        <div class="section-title">
+                            <h4 class="title">{{ plans.title }} Subscription</h4>
+                        </div>
+
+
+
+
+                        <table class="shopping-cart-table table">
+
+                            {% for r in planDuration %}
+
+
+                            <tr {% if r.id == select_planDuration.id %} style="background-color:{{ plans.color_code }}" {% endif %}>
+
+                                <td class="text-left">
+                                    <input type="radio" onclick="javascript:window.location.href='/offer/plans/{{ plans.slug }}/{{ r.slug }}'; return false;"
+                                           name="timeoptions{{r.id}}" id="radio{{r.id}}"  {% if r.id == select_planDuration.id %} checked {% endif %}>
+                                </td>
+
+                                <td class="text-left">
+                                    <a href="/offer/plans/{{ plans.slug }}/{{ r.slug }}">
+                                        <strong> {{ r.title }}</strong>
+                                    </a>
+                                </td>
+                                <td class="text-left">₹{{ r.price|div:r.duration|floatformat:"2" }} X {{ r.duration }} =
+                                    {{ r.price }}</td>
+
+
+
+                                <td class="text-left">
+
+                                    {% if not subscriber %}
+
+                                    <a class="primary-btn pull-right" href="/offer/plans/{{ plans.slug }}/{{ r.slug }}" style="font-size:10px; text-align:center; margin-right:-10px;">
+                                        Save ₹{{ highestPricePerDay|mul:r.duration|sub:r.price|floatformat:"2" }}  </a>
+
+                                    {% else %}
+
+                                        {% if current_planrank <= plans.rank and current_planprice < r.price %}
+                                        <a class="primary-btn pull-right" href="/offer/plans/{{ plans.slug }}/{{ r.slug }}" style="font-size:10px; text-align:center; margin-right:-10px;">
+                                            Upgrade<br>
+                                            Save ₹{{ highestPricePerDay|mul:r.duration|sub:r.price|floatformat:"2" }}
+
+                                        </a>
+                                        {% endif %}
+
+                                    {% endif %}
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </table>
+
+                            <table class="shopping-cart-table table">
+
+                            <tfoot>
+                                <tr>
+                                    <th class="empty" colspan="1"></th>
+                                    <th>Plan name</th>
+                                    <th class="sub-total" colspan="1">{{ select_planDuration }}</th>
+                                </tr>
+                                <tr>
+                                    <th class="empty" colspan="1"></th>
+                                    <th>Duration</th>
+                                    <td colspan="1">{{ now_aware }} - {{ end_aware }} ({{ select_planDuration.duration }})</td>
+                                </tr>
+                                <tr>
+                                    <th class="empty" colspan="1"></th>
+                                    <th>Price</th>
+                                    <td colspan="1">₹{{ select_planDuration.price }}</td>
+                                </tr>
+
+                                {% if subscriber and current_planrank <= plans.rank and current_planprice < select_planDuration.price  %}
+
+                                <tr>
+                                    <th class="empty" colspan="1"></th>
+                                    <th>Money Remaining</th>
+                                    <td colspan="1">₹{{ moneyRemaining }}
+
+
+
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="pull-right" data-toggle="modal" data-target="#exampleModalCenter" style="color:#F8694A; border:none; background:none;">
+                                          More info
+                                        </button>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                          <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Your Current Plan</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                  <span aria-hidden="true">&times;</span>
+                                                </button>
+                                              </div>
+                                              <div class="modal-body">
+                                                  <table class="shopping-cart-table table">
+
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th class="empty" colspan="1"></th>
+                                                            <th>Plan name</th>
+                                                            <th class="sub-total" colspan="1">{{ current_planname }}</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="empty" colspan="1"></th>
+                                                            <th>Started on</th>
+                                                            <td colspan="1">{{ startdate }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="empty" colspan="1"></th>
+                                                            <th>Expires on</th>
+                                                            <td colspan="1">{{ enddate }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="empty" colspan="1"></th>
+                                                            <th>Days left</th>
+                                                            <td colspan="1">{{ daysRemaining }}</td>
+                                                        </tr><tr>
+                                                            <th class="empty" colspan="1"></th>
+                                                            <th>Money Remaining</th>
+                                                            <td colspan="1">Total Price: <span class="pull-right" style="20px;">₹{{ current_planprice }}</span>
+                                                                <br><span class="pull-left">Convenient Charge: </span><u class="pull-right" style="20px;">-  ₹{{ usage_charge }}   </u>
+                                                                <br>
+                                                                <p class="pull-right" style="20px;">₹{{ moneyRemaining }}</p>
+                                                            </td>
+
+                                                        </tr>
+                                                    </tfoot>
+                                                  </table>
+                                                ...
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" class="primary-btn" data-dismiss="modal">Close</button>
+
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+
+
+
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th class="empty" colspan="1"></th>
+                                    <th>Final Price</th>
+                                    <th class="total" colspan="1">₹{{ select_planDuration.price|sub:moneyRemaining|floatformat:"2" }}</th>
+                                </tr>
+                                <tr>
+                                </tr>
+                            {% endif %}
+                                </tfoot>
+
+
+                    </table>
+                        {% if subscriber and current_planrank <= plans.rank and current_planprice < select_planDuration.price  %}
+
+                        <form action="/offer/purchaseplan/{{ select_planDuration.id }}" method="post">
+                                        {% csrf_token %}
+                            <button class="primary-btn pull-right"  style="font-size:20px; text-align:center;">
+                                        Pay ₹{{ select_planDuration.price|sub:moneyRemaining|floatformat:"2" }} and Upgrade
+                            </button>
+                        </form>
+
+                        {% elif not subscriber %}
+
+                        <form action="/offer/purchaseplan/{{ select_planDuration.id }}" method="post">
+                                        {% csrf_token %}
+                            <button class="primary-btn pull-right" style="font-size:20px; text-align:center;">
+                                    Pay ₹{{ select_planDuration.price }}
+                            </button>
+                        </form>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="col-md-12">
+
+                        <div class="card pricing-card pricing-card-highlighted  pricing-plan-pro">
+                                <div style="background-color:{{ plans.color_code }}; height: 200px; display: flex; border-radius:20px 0px 0px 0px;">
+                                    <h2 class="col" style="margin: auto; max-width: 750px; font-family:Times New Roman; font-size:36px;">
+                                        {% if subscriber and current_planrank <= plans.rank and current_planprice < select_planDuration.price  %}
+                                        {{ select_planDuration.title }}<br><p style="font-size: 20px;">Plan Upgrade</p>
+                                        {% else %}
+                                            {{ select_planDuration.title }}
+                                        {% endif %}
+
+                                    </h2>
+
+                                </div>
+                                <div class="card-body">
+
+
+                                     <h2 style=" position: relative; bottom:80px; font-size: 54px;">
+                                         {% if subscriber and current_planrank <= plans.rank and current_planprice < select_planDuration.price  %}
+                                         <del style="font-size:40px;">₹{{ select_planDuration.price }}</del> ₹{{ select_planDuration.price|sub:moneyRemaining }}
+                                        {% else %}
+                                         {{ select_planDuration.price }}
+                                         {% endif %}
+                                     </h2>
+                                    <p style=" position: relative; bottom:80px;">₹ {{ select_planDuration.price|div:select_planDuration.duration|floatformat:"2" }} / Day</p>
+                                    {% if subscriber %}
+                                    {% if current_planrank > plans.rank or current_planprice > select_planDuration.price  %}
+                                        <p style=" position: relative; bottom:80px; color:red;"> Downgrade is not allowed</p>
+                                    {% endif %}
+                                    {% if subscriber and current_planrank == plans.rank and current_planprice == select_planDuration.price  %}
+                                        <p style=" position: relative; bottom:80px; color:green;">You have already subscribed</p>
+                                    {% endif %}
+                                    {% endif %}
+
+
+
+                                    <ul class="pricing-plan-features">
+                                        <li><b style="font-size:20px;">{{ select_planDuration.duration }}</b> day total service</li>
+                                        <li><b style="font-size:20px;">{{ select_planDuration.percentage }}</b> Discount on all purchase
+                                        </li>
+                                        <li>Upto <b style="font-size:20px;">₹ {{ select_planDuration.limit_amount }}</b> Off on every purchase</li>
+
+                                    </ul>
+
+
+
+                                </div>
+
+                            </div>
+
+
+                    </div>
+                </div>
+
+
+
+
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /section -->
+
+
+
+
+{% endblock %}

@@ -1,0 +1,206 @@
+{% extends 'homebase.html' %}
+
+{% block title %}  My Cart | {{setting.title}} {% endblock %}
+{% block description %} {{setting.description}} {% endblock %}
+{% block keywords %} {{setting.keywords}} {% endblock %}
+
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+{% block body %}
+{% load static %}
+{% load mathfilters %}
+
+<style>
+    .card {
+    margin-bottom: 30px;
+    border: 0;
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease;
+    letter-spacing: .5px;
+    border-radius: 8px;
+    -webkit-box-shadow: 1px 5px 24px 0 rgba(68, 102, 242, .05);
+    box-shadow: 1px 5px 24px 0 rgba(68, 102, 242, .05)
+    }
+</style>
+<!-- BREADCRUMB -->
+<div id="breadcrumb">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active">Shopcart</li>
+        </ul>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
+
+
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+
+            {% if total == 0 %}
+            <div class="col-md-12">
+                <div class="container-fluid mt-100">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+
+                                <div class="card-body cart">
+                                    <div class="col-sm-12 empty-cart-cls text-center"> <img src="{% static '' %}img/emptycart.png"  class="img-fluid mb-4 mr-3" style="margin-left:80px;">
+                                        <h3><strong>Your Cart is Empty</strong></h3>
+                                        <h4>Add something to make me happy :)</h4> <br>
+                                        <a href="/" class="primary-btn add-to-cart cart-btn-transform m-3" data-abc="true">continue shopping</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% else %}
+
+
+            <div class="col-md-12">
+                <div class="order-summary clearfix">
+                    <div class="section-title">
+                        <h3 class="title">Shopcart Product List</h3>
+                    </div>
+                    <table class="shopping-cart-table table">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Your Product</th>
+                            <th class="text-center">Price</th>
+                            <th class="text-center">Quantity</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Delete</th>
+                            <th class="text-right"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for rs in shopcart %}
+
+
+                        <form action="/order/addtoshopcart/{{ rs.product.id }}" id="addchart-form" method="post">
+                            {% csrf_token %}
+                            <tr>
+                                <td class="thumb">
+                                    <a href="/product/{{ rs.product.id }}/{{ rs.product.slug }}">
+                                    {% if rs.variant.image_id > 0 %}
+                                    <img alt="" src="{{rs.variant.image }}" style=" height: 40px; width: 50px; object-fit: cover;" >
+                                    {% else %}
+                                    <img alt="" src="{{rs.product.image.url}}" style=" height: 40px; width: 50px; object-fit: cover;">
+                                    {% endif %}
+                                    </a>
+                                </td>
+                                <td class="details">
+                                    <a href="/product/{{ rs.product.id }}/{{ rs.product.slug }}">
+                                        {{rs.product}}</a>
+                                        {% if rs.product.variant != 'None' %}
+                                        <input id="variantid" name="variantid" type="hidden"
+                                               value="{{ rs.variant.id }}">
+                                        <br><br>
+                                        {% if rs.variant.size != None and rs.variant.color != None %}<h5> Size: {{ rs.variant.size }} | Color: {{ rs.variant.color }} {% endif %}</h5>
+                                            {% if rs.variant.size != None and rs.variant.color == None %}<h5> Size: {{ rs.variant.size }} {% endif %}</h5>
+                                            {% if rs.variant.size == None and rs.variant.color != None %}<h5> Color: {{ rs.variant.color }} {% endif %}</h5>
+                                        {% endif %}</td>
+                                <td class="price text-center"><strong>
+                                    <p class="product-price">
+
+										{% for dp in discountP %}
+											{% if dp.product_id == rs.product_id and dp.variant_id == rs.variant_id %}
+										<del class="product-old-price" style="color:#F8694A;">
+											{% else %}
+											<span>
+												{% endif %}
+												{% endfor %}
+
+											₹{% if rs.variant != None %}{{ rs.variant.price }}{% else %}{{ rs.product.price }}{% endif %}
+										</del>
+										{% for dp in discountP %}
+											{% if dp.product_id == rs.product_id and dp.variant_id == rs.variant_id %}
+										<span> &nbsp; ₹{{ dp.DiscountPrice }}
+
+										</span>
+										{% endif %}
+										{% endfor %}
+									</p>
+                                </strong></td>
+                                <td class="qty text-center"><input class="input" name="quantity" type="number"
+                                                                   value="{{rs.quantity}}" min="1" max="{% if rs.product.variant != 'None' %}{{ rs.variant.quantity }}{% else %}{{ rs.product.amount }}{% endif %}"><strong></strong>
+                                     <button class="main-btn quick-view" type="submit">Update</button>
+                                </td>
+                                <td class="total text-center"><strong class="primary-color" style="color:#000000;">
+                                    {% for dp in discountP %}
+											{% if dp.product_id == rs.product_id and dp.variant_id == rs.variant_id %}
+										<del class="product-old-price" style="color:#F8694A;">
+											{% else %}
+											<span>
+												{% endif %}
+												{% endfor %}
+
+											₹{% if rs.variant != None %}{{ rs.variant.price|mul:rs.quantity }}{% else %}{{ rs.product.price|mul:rs.quantity }}{% endif %}
+										</del>
+										{% for dp in discountP %}
+											{% if dp.product_id == rs.product_id and dp.variant_id == rs.variant_id %}
+										<span> &nbsp; ₹{{ dp.DiscountPrice|mul:rs.quantity }}
+
+										</span>
+										{% endif %}
+										{% endfor %}
+                                </strong></td>
+                                <td class="text-right"><a class="main-btn icon-btn"
+                                                          href="/order/deletefromcart/{{ rs.id }}"
+                                                          onclick="return confirm('Delete ! Are you sure?')"><i class="fa fa-close"></i></a></td>
+                            </tr>
+                        </form>
+
+                        {% endfor %}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th class="empty" colspan="3"></th>
+                            <th>SUBTOTAL</th>
+                            <th class="sub-total" colspan="2"><h4 class="pull-right">
+                               {% if discountlessTotal != total %} <del style="color:#F8694A;">₹{{ discountlessTotal }}</del>{% endif %} &nbsp; ₹{{ total }}</h4></th>
+
+                        </tr>
+                        <tr>
+                            <th class="empty" colspan="3"></th>
+                            <th>SHIPPING</th>
+                            <td colspan="2"><h4 class="pull-right">Free Shipping</h4></td>
+                        </tr>
+
+                        <tr>
+                            <th class="empty" colspan="3"></th>
+                            <th>SUBSCRIPTION DISCOUNT</th>
+                            <td colspan="2" ><h4 class="pull-right">- ₹{{ priceOff }}</h4></td>
+                        </tr>
+
+                        <tr>
+                            <th class="empty" colspan="3"></th>
+                            <th>TOTAL</th>
+                            <th style="text-align:right;" class="total" colspan="2"><h3 style="color:#F8694A;">₹{{ totalprice }}</h3>
+                            {% if discountlessTotal != totalprice %}
+                                <p style="font-size:15px;">You saved ₹{{ discountlessTotal|sub:totalprice }}
+                                {% endif %}</p>
+                            </th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                    <div class="pull-right">
+                        <a class="primary-btn" href="{% url 'orderproduct' %}">Go to Checkout</a>
+                    </div>
+                </div>
+            </div>
+
+            {% endif %}
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /section -->
+{% endblock %}

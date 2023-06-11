@@ -1,0 +1,129 @@
+
+
+
+<div class="page-content p-5" id="content">
+  <!-- Toggle button -->
+  <button id="sidebarCollapse" type="button" class="btn btn-light bg-white rounded-pill shadow-sm px-4 mb-4"><i class="fa fa-bars mr-2"></i><small class="text-uppercase font-weight-bold">Toggle</small></button>
+  </div>
+
+
+<!-- Vertical navbar -->
+<div class="vertical-nav bg-white" id="sidebar" style="width:100%; background-color:orange; color:#FFFFFF; text-align:center; margin-top:40px;">
+
+  <div class="py-4 px-3 mb-4 bg-light">
+    <div class="media d-flex align-items-center"><img src="{{ request.session.userimage }}" style="height:80px; width:80px; border-radius:50%; object-fit: cover; margin:20px;" >
+      <div class="media-body">
+        <h4 class="m-0">{{user.first_name}} {{ user.last_name }}</h4>
+        <p class="font-weight-light text-muted mb-0">Web developer</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-gray font-weight-bold text-uppercase px-3 small pb-4 mb-0">User Details</p>
+
+  <ul class="nav flex-column bg-white mb-0">
+    <li class="nav-item" {% if active == 'user' %} style="background-color:white; opacity:70%;"{% endif %}>
+      <a href="/user/" class="nav-link text-dark font-italic bg-light">
+                <i class="fa fa-th-large mr-3 text-primary fa-fw"></i>
+                My Profile
+            </a>
+    </li>
+    <li class="nav-item" {% if active == 'user_update' %} style="background-color:white; opacity:70%;"{% endif %}>
+      <a href="/user/update/" class="nav-link text-dark font-italic">
+                <i class="fa fa-address-card mr-3 text-primary fa-fw"></i>
+                Update profile
+            </a>
+    </li>
+    <li class="nav-item" {% if active == 'address' %} style="background-color:white; opacity:70%;"{% endif %}>
+      <a href="/user/address/" class="nav-link text-dark font-italic">
+                <i class="fa fa-cubes mr-3 text-primary fa-fw"></i>
+                Saved Address
+            </a>
+    </li>
+    <li class="nav-item" {% if active == 'favourites' %} style="background-color:white; opacity:70%;"{% endif %}>
+      <a href="/user/favourites/" class="nav-link text-dark font-italic">
+                <i class="fa fa-picture-o mr-3 text-primary fa-fw"></i>
+                My Favourites
+            </a>
+    </li>
+    <li class="nav-item" {% if active == 'comments' %} style="background-color:white; opacity:70%;"{% endif %}>
+      <a href="/user/comments/" class="nav-link text-dark font-italic">
+                <i class="fa fa-picture-o mr-3 text-primary fa-fw"></i>
+                All Comments
+            </a>
+    </li>
+  </ul>
+
+  <p class="text-gray font-weight-bold text-uppercase px-3 small py-4 mb-0">Orders and Payments</p>
+
+  <ul class="nav flex-column bg-white mb-0">
+    <li class="nav-item" {% if active == 'orders' %} style="background-color:white; opacity:70%;"{% endif %}>
+      <a href="/user/orders/" class="nav-link text-dark font-italic active">
+                <i class="fa fa-area-chart mr-3 text-primary fa-fw"></i>
+                My Orders
+            </a>
+    </li>
+    <li class="nav-item" {% if active == 'orderdetail' %} style="background-color:white; opacity:70%;"{% endif %}>
+      <a href="/user/orders_product" class="nav-link text-dark font-italic">
+                <i class="fa fa-bar-chart mr-3 text-primary fa-fw"></i>
+                My Order Products
+            </a>
+    </li>
+    <li class="nav-item" {% if active == 'wallet' %} style="background-color:white; opacity:70%;"{% endif %}>
+      <a href="/user/wallet" class="nav-link text-dark font-italic">
+                <i class="fa fa-pie-chart mr-3 text-primary fa-fw"></i>
+                Wallet Transaction
+            </a>
+    </li>
+    <li class="nav-item">
+      <a href="/logout" class="nav-link text-dark font-italic">
+                <i class="fa fa-line-chart mr-3 text-primary fa-fw"></i>
+                Log Out
+            </a>
+    </li>
+  </ul>
+</div>
+<!-- End vertical navbar -->
+
+
+<!-- Page content holder -->
+
+
+  <!-- Demo content -->
+
+<!-- End demo content -->
+
+<script>
+    $(function() {
+  // Sidebar toggle behavior
+  $('#sidebarCollapse').on('click', function() {
+    $('#sidebar, #content').toggleClass('active');
+  });
+});
+
+</script>
+
+<!--
+
+
+
+
+<div class="billing-details">
+    <div class="section-title">
+        <h3 class="title">User Panel</h3>
+    </div>
+    <div class="aside">
+    <ul class="list-links">
+        <li><a href="/user">User Profile</a></li>
+        <li><a href="/user/orders">My Orders</a></li>
+        <li><a href="/user/orders_product">My Order Product</a></li>
+        <li><a href="/user/comments">My Comments</a></li>
+        <li><a href="/user/favorits">My Favorits</a></li>
+        <li><a href="/user/products">My Products</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+</div>
+-->
+
+

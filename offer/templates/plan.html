@@ -1,0 +1,369 @@
+{% extends 'homebase.html' %}
+
+{% block title %}  Plans {% endblock %}
+{% block description %} {{setting.description}} {% endblock %}
+{% block keywords %} {{setting.keywords}} {% endblock %}
+
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+
+
+{% block body %}
+{% load mathfilters %}
+<style>
+  body {
+  font-family: 'Karla', sans-serif; }
+
+.pricing-table-subtitle {
+  margin-top: 68px;
+  font-weight: normal; }
+
+.pricing-table-title {
+  font-weight: bold;
+  margin-bottom: 68px; }
+
+.pricing-card {
+  border: none;
+  border-radius: 10px;
+  margin-bottom: 40px;
+  text-align: center;
+  -webkit-transition: all 0.6s;
+  transition: all 0.6s; }
+  .pricing-card:hover {
+    box-shadow: 0 2px 40px 0 rgba(205, 205, 205, 0.55); }
+  .pricing-card.pricing-card-highlighted {
+    box-shadow: 0 2px 40px 0 rgba(205, 205, 205, 0.55); }
+  .pricing-card:hover {
+    box-shadow: 0 2px 40px 0 rgba(205, 205, 205, 0.55);
+    -webkit-transform: translateY(-10px);
+            transform: translateY(-10px); }
+  .pricing-card .card-body {
+    padding-top: 55px;
+    padding-bottom: 62px; }
+
+.pricing-plan-title {
+  font-size: 20px;
+  color: #000;
+  margin-bottom: 11px;
+  font-weight: normal; }
+
+.pricing-plan-cost {
+  font-size: 50px;
+  color: #000;
+  font-weight: bold;
+  margin-bottom: 29px; }
+
+.pricing-plan-icon {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  font-size: 40px;
+  line-height: 1;
+  margin-bottom: 24px; }
+  .pricing-plan-basic .pricing-plan-icon {
+    color: #fe397a; }
+  .pricing-plan-pro .pricing-plan-icon {
+    color: #10bb87; }
+  .pricing-plan-enterprise .pricing-plan-icon {
+    color: #5d78ff; }
+
+.pricing-plan-features {
+  list-style: none;
+  padding-left: 0;
+  font-size: 14px;
+  line-height: 2.14;
+  margin-bottom: 35px;
+  color: #303132; }
+
+.pricing-plan-purchase-btn {
+  color: #000;
+  font-size: 16px;
+  font-weight: bold;
+  width: 145px;
+  height: 45px;
+  border-radius: 22.5px;
+  -webkit-transition: all 0.4s;
+  transition: all 0.4s;
+  position: relative;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+          align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-box-pack: center;
+          justify-content: center; }
+  .pricing-plan-basic .pricing-plan-purchase-btn {
+    background-color: #fe397a;
+    color: #fff; }
+    .pricing-plan-basic .pricing-plan-purchase-btn:hover {
+      box-shadow: 0 3px 0 0 #b7013d; }
+    .pricing-plan-basic .pricing-plan-purchase-btn:active {
+      -webkit-transform: translateY(3px);
+              transform: translateY(3px);
+      box-shadow: none; }
+  .pricing-plan-pro .pricing-plan-purchase-btn {
+    background-color: #10bb87;
+    color: #fff; }
+    .pricing-plan-pro .pricing-plan-purchase-btn:hover {
+      box-shadow: 0 3px 0 0 #0a7554; }
+    .pricing-plan-pro .pricing-plan-purchase-btn:active {
+      -webkit-transform: translateY(3px);
+              transform: translateY(3px);
+      box-shadow: none; }
+  .pricing-plan-enterprise .pricing-plan-purchase-btn {
+    background-color: #5d78ff;
+    color: #fff; }
+    .pricing-plan-enterprise .pricing-plan-purchase-btn:hover {
+      box-shadow: 0 3px 0 0 #1138ff; }
+    .pricing-plan-enterprise .pricing-plan-purchase-btn:active {
+      -webkit-transform: translateY(3px);
+              transform: translateY(3px);
+      box-shadow: none; }
+
+
+</style>
+<!-- BREADCRUMB -->
+<div id="breadcrumb">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active">Plans</li>
+        </ul>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
+
+<div>
+
+
+    <div class="container">
+        <h5 class="text-center pricing-table-subtitle">PRICING PLAN</h5>
+        <h1 class="text-center pricing-table-title">Pricing Table</h1>
+
+
+        <div class="product-tab">
+            <ul class="tab-nav">
+                <li class="active"><a data-toggle="tab" href="#tab1">12-Month Plan</a></li>
+                <li><a data-toggle="tab" href="#tab2">6-Month Plan</a></li>
+                <li><a data-toggle="tab" href="#tab3">1-Month Plan</a></li>
+
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="tab1">
+                    <div class="row">
+
+                        {% for rs in plans %}
+
+                        <div class="col-md-4" style="border-radius:10px;">
+                            {% for r in planDuration %}
+                             {% if r.duration > 300 and r.duration < 500 and r.subscription_id == rs.id %}
+                            <div class="card pricing-card pricing-card-highlighted  pricing-plan-pro">
+                                <div style="background-color:{{rs.color_code}}; height: 200px; display: flex; border-radius:20px 0px 0px 0px;">
+                                    <h2 class="col" style="margin: auto; max-width: 750px; font-family:Times New Roman; font-size:36px;">{{rs.title}}</h2>
+
+                                </div>
+                                <div class="card-body">
+
+                                     <h2 style=" position: relative; bottom:80px; font-size: 54px;">₹{{ r.price }}</h2>
+                                    <p style=" position: relative; bottom:80px;">₹{{ r.price|div:r.duration|floatformat:"2" }} / Day</p>
+
+
+                                    <ul class="pricing-plan-features">
+                                        <li><b style="font-size:20px;">{{ r.duration }}</b> day total service</li>
+                                        <li><b style="font-size:20px;">{{ r.percentage }}%</b> Discount on all purchase
+                                        </li>
+                                        <li>Upto <b style="font-size:20px;">₹{{ r.limit_amount }}</b> Off on every purchase</li>
+
+                                    </ul>
+
+                                    {% if not subscriber %}
+
+                                    <a href="/offer/plans/{{ rs.slug }}/{{ r.slug }}" class="btn pricing-plan-purchase-btn"
+                                       style="background-color: {{ rs.color_code }}">Purchase</a>
+
+
+                                    {% else %}
+                                        {% if current_planrank <= rs.rank and current_planprice <  r.price   %}
+
+                                    <a href="/offer/plans/{{ rs.slug }}/{{ r.slug }}" class="btn pricing-plan-purchase-btn"
+                                       style="background-color: {{ rs.color_code }}">Upgrade</a>
+
+
+
+
+                                        {% elif current_planrank == rs.rank and current_planprice ==  r.price %}
+
+                                        <p style="color:green;">You have already subscribed</p>
+
+
+
+
+                                        {% else  %}
+
+                                        <p style="color:red;">Downgrade not allowed</p>
+                                    
+                                        {% endif %}
+                                    {% endif %}
+
+                                </div>
+                                {% endif %}
+                                    {% endfor %}
+                            </div>
+                        </div>
+
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+                <div class="tab-pane fade in" id="tab2">
+                    <div class="row">
+
+                        {% for rs in plans %}
+
+                        <div class="col-md-4" style="border-radius:10px;">
+                            {% for r in planDuration %}
+                             {% if r.duration < 300 and r.duration > 100 and r.subscription_id == rs.id %}
+                            <div class="card pricing-card pricing-card-highlighted  pricing-plan-pro">
+                                <div style="background-color:{{rs.color_code}}; height: 200px; display: flex; border-radius:20px 0px 0px 0px;">
+                                    <h2 class="col" style="margin: auto; max-width: 750px; font-family:Times New Roman; font-size:36px;">{{rs.title}}</h2>
+
+                                </div>
+                                <div class="card-body">
+
+                                     <h2 style=" position: relative; bottom:80px; font-size: 54px;">₹{{ r.price }}</h2>
+                                    <p style=" position: relative; bottom:80px;">₹{{ r.price|div:r.duration|floatformat:"2" }} / Day</p>
+
+
+                                    <ul class="pricing-plan-features">
+                                        <li><b style="font-size:20px;">{{ r.duration }}</b> day total service</li>
+                                        <li><b style="font-size:20px;">{{ r.percentage }}%</b> Discount on all purchase
+                                        </li>
+                                        <li>Upto <b style="font-size:20px;">₹{{ r.limit_amount }}</b> Off on every purchase</li>
+
+                                    </ul>
+
+                                    {% if not subscriber %}
+
+                                    <a href="/offer/plans/{{ rs.slug }}/{{ r.slug }}" class="btn pricing-plan-purchase-btn"
+                                       style="background-color: {{ rs.color_code }}">Purchase</a>
+
+
+                                    {% else %}
+                                        {% if current_planrank <= rs.rank and current_planprice <  r.price   %}
+
+                                    <a href="/offer/plans/{{ rs.slug }}/{{ r.slug }}" class="btn pricing-plan-purchase-btn"
+                                       style="background-color: {{ rs.color_code }}">Upgrade</a>
+
+
+
+
+                                        {% elif current_planrank == rs.rank and current_planprice ==  r.price %}
+
+                                        <p style="color:green;">You have already subscribed</p>
+
+
+
+
+                                        {% else  %}
+
+                                        <p style="color:red;">Downgrade not allowed</p>
+                                        {% endif %}
+                                    {% endif %}
+
+                                </div>
+                                {% endif %}
+                                    {% endfor %}
+                            </div>
+                        </div>
+
+                        {% endfor %}
+
+
+                    </div>
+
+
+                </div>
+
+                <div class="tab-pane fade in" id="tab3">
+                    <div class="row">
+
+                        {% for rs in plans %}
+
+                        <div class="col-md-4" style="border-radius:10px;">
+                            {% for r in planDuration %}
+                             {% if r.duration > 0 and r.duration < 100 and r.subscription_id == rs.id %}
+                            <div class="card pricing-card pricing-card-highlighted  pricing-plan-pro">
+                                <div style="background-color:{{rs.color_code}}; height: 200px; display: flex; border-radius:20px 0px 0px 0px;">
+                                    <h2 class="col" style="margin: auto; max-width: 750px; font-family:Times New Roman; font-size:36px;">{{rs.title}}</h2>
+
+                                </div>
+                                <div class="card-body">
+
+                                     <h2 style=" position: relative; bottom:80px; font-size: 54px;">₹{{ r.price }}</h2>
+                                    <p style=" position: relative; bottom:80px;">₹{{ r.price|div:r.duration|floatformat:"2" }} / Day</p>
+
+
+                                    <ul class="pricing-plan-features">
+                                        <li><b style="font-size:20px;">{{ r.duration }}</b> day total service</li>
+                                        <li><b style="font-size:20px;">{{ r.percentage }}%</b> Discount on all purchase
+                                        </li>
+                                        <li>Upto <b style="font-size:20px;">₹{{ r.limit_amount }}</b> Off on every purchase</li>
+
+                                    </ul>
+
+                                    {% if not subscriber %}
+
+                                    <a href="/offer/plans/{{ rs.slug }}/{{ r.slug }}" class="btn pricing-plan-purchase-btn"
+                                       style="background-color: {{ rs.color_code }}">Purchase</a>
+
+
+                                    {% else %}
+                                        {% if current_planrank <= rs.rank and current_planprice <  r.price   %}
+
+                                    <a href="/offer/plans/{{ rs.slug }}/{{ r.slug }}" class="btn pricing-plan-purchase-btn"
+                                       style="background-color: {{ rs.color_code }}">Upgrade</a>
+
+
+
+                                    {% elif current_planrank == rs.rank and current_planprice ==  r.price %}
+
+                                        <p style="color:green;">You have already subscribed</p>
+
+
+
+
+                                        {% else  %}
+
+                                        <p style="color:red;">Downgrade not allowed</p>
+
+
+                                        {% endif %}
+                                    {% endif %}
+
+                                </div>
+                                {% endif %}
+                                    {% endfor %}
+                            </div>
+                        </div>
+
+                        {% endfor %}
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}

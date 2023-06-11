@@ -1,0 +1,122 @@
+{% extends 'dashHomebase.html' %}
+{% load static %}
+{% block title %} Dashboard Index{{setting.title}} {% endblock %}
+{% block description %} {{setting.description}} {% endblock %}
+{% block keywords %} {{setting.keywords}} {% endblock %}
+
+{% block dashtop %} {% include 'dashtop.html' %} {% endblock %}
+
+{% block dashSidebar %} {% include 'dashSidebar.html' %} {% endblock %}
+{% block dashbody %} <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid">
+                <h1 class="mt-4">{% if active == 'preparing' %}Preparing List
+                                    {% elif active == 'waiting' %}Waiting List
+                                    {% elif active == 'ready' %}Ready List{% endif %}
+                </h1>
+
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item"><a href="/delivery">Dashboard</a></li>
+                    {% if active == 'waiting' %}<li class="breadcrumb-item active">Waiting List</li>{% endif %}
+                    {% if active == 'ready' %}<li class="breadcrumb-item active">Ready List</li>{% endif %}
+                </ol>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table mr-1"></i>
+                        {% if active == 'waiting' %}DataTable of all the pending orders{% endif %}
+                        {% if active == 'ready' %}DataTable of all the ready orders{% endif %}
+
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table cellspacing="0" class="table table-bordered" id="dataTable" width="100%">
+                                <thead>
+                                <tr>
+                                    <th>OrderID</th>
+                                    <th>Customer</th>
+                                    <th>Order Products</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th>OrderID</th>
+                                    <th>Customer</th>
+                                    <th>Order Products</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                </tr>
+                                </tfoot>
+                                <tbody>
+
+                                {% for rs in DeliveryManagements %}
+                                <tr>
+                                    <td>#{{ rs.confirmedOrder_id }}</td>
+                                     <td>{{ rs.customerUsername }}</td>
+                                    <td>
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Product</th>
+                                                <th>Variant</th>
+                                                <th>Quantity</th>
+                                            </tr>
+                                            </thead>
+                                            {% for tu in ConfirmedOrderProducts %}
+                                                {% if tu.order_id == rs.confirmedOrder_id %}
+                                            <tr>
+                                            <td class="thumb">
+                                                <a href="/product/{{ tu.product.id }}/{{ tu.product.slug }}">
+                                                {% if tu.variant.image_id > 0 %}
+                                                <img alt="" src="{{tu.variant.image }}" style=" height: 40px; width: 50px; object-fit: cover;" >
+                                                {% else %}
+                                                <img alt="" src="{{tu.product.image.url}}" style=" height: 40px; width: 50px; object-fit: cover;">
+                                                {% endif %}
+                                                </a>
+                                            </td>
+                                            <td>{{ tu.product }}</td>
+                                            <td>{{ tu.variant }}</td>
+                                            <td>{{ tu.quantity }}</td>
+                                            </tr>
+                                            {% endif %}
+                                                {% endfor %}
+                                        </table>
+                                    </td>
+                                    <td>{{ rs.timestamp }}</td>
+                                    <td>{% if active == 'preparing' %}<a class="btn btn-success" href="/delivery/finish-preparing/{{ rs.id }}">Finish Preparing</a>{% endif %}
+                                    {% if active == 'waiting' %}{{ rs.deliveryStatus }}{% endif %}
+                                    {% if active == 'ready' %}{{ rs.deliveryStatus }}{% endif %}</td>
+
+                                </tr>
+                                {% endfor %}
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Your Website 2020</div>
+                    <div>
+                        <a href="#">Privacy Policy</a>
+                        &middot;
+                        <a href="#">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>   {% endblock %}
+
+
+
+
+
+

@@ -1,0 +1,74 @@
+{% extends 'homebase.html' %}
+
+{% block title %} Contact Us | {{setting.title}} {% endblock %}
+{% block description %} {{setting.description}} {% endblock %}
+{% block keywords %} {{setting.keywords}} {% endblock %}
+
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+{% block body %}
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active">Contact Us</li>
+        </ul>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
+
+<!-- section -->
+<!-- section -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="billing-details">
+                    <div class="section-title">
+                        <h3 class="title">Contact Form</h3>
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{message.tags}}" role="alert">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <form class="clearfix" id="checkout-form" method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="submit" value="SEND FORM">
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="shiping-methods">
+                    <div class="section-title">
+                        <h4 class="title">Contact Information</h4>
+                    </div>
+
+                    {{setting.contact | safe}}
+
+
+                </div>
+
+                <div class="payments-methods">
+                    <div class="section-title">
+                        <h4 class="title">Be A Bantu</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /section -->
+
+
+{% endblock %}

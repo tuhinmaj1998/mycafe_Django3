@@ -1,0 +1,387 @@
+{% extends 'homebase.html' %}
+
+{% block title %}  Order Page | {{setting.title}} {% endblock %}
+{% block description %} {{setting.description}} {% endblock %}
+{% block keywords %} {{setting.keywords}} {% endblock %}
+
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+{% block body %}
+{% load mathfilters %}
+<!-- BREADCRUMB -->
+<div id="breadcrumb">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/shopcart/">My Cart</a></li>
+            <li class="active">Order Page</li>
+        </ul>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
+<!-- section -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <Form action="" method="post">
+                {% csrf_token %}
+                <div class="col-md-5">
+                    <div class="billing-details">
+
+                        <div class="section-title">
+                            <h4 class="title">Shipping Details</h4>
+                        </div>
+                        <p><label for="id_first_name">First name:</label>
+                            <input class="input" id="id_first_name" maxlength="10" name="first_name"
+                                   required type="text" value="{{ user.first_name }}" ></p>
+                        <p><label for="id_last_name">Last name:</label>
+                            <input class="input" id="id_last_name" maxlength="10" name="last_name"
+                                   required type="text" value="{{ user.last_name }}"></p>
+
+                        <p><label for="id_phone">Phone:</label>
+                            <input class="input" id="id_phone" maxlength="20" name="phone" type="text"
+                                   required value="{{ profile.phone }}"></p>
+
+
+
+
+
+
+
+
+<style>
+
+label {
+    width: 100%;
+}
+
+.card-input-element {
+    display: none;
+}
+
+.card-input {
+    margin: 10px;
+    padding: 00px;
+    opacity:50%;
+}
+
+.card-input:hover {
+    cursor: pointer;
+}
+
+.card-input-element:checked + .card-input {
+     box-shadow: 0 0 2px 2px orange;
+     opacity:100%;
+ }
+
+</style>
+
+
+                          <div class="row">
+                              {% for ad in userAddress %}
+
+
+                                  <input type="hidden" name="locationAddress" value="{{ ad.locationAddress }}" required/>
+                                  <input type="hidden" name="houseNo" value="{{ ad.houseNo }}" required/>
+                                  <input type="hidden" name="latitude" value="{{ ad.latitude }}" required/>
+                                  <input type="hidden" name="longitude" value="{{ ad.longitude }}" required/>
+
+                                   <div class="col-md-4 col-lg-4 col-sm-4">
+                                <label>
+                                  <input type="radio" name="userAddress" class="card-input-element" value="{{ ad.id }}" required/>
+                                    <div class="panel panel-default card-input">
+                                      <div class="panel-heading">{{ ad.title }}</div>
+                                      <div style="height: 100px;"><p>
+                                          {{ ad.locationAddress }}</p>
+                                      </div>
+                                    </div>
+
+                                </label>
+
+                              </div>
+                              {% endfor %}
+                          </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+
+                <div class="col-md-7">
+                    <div class="col-md-12">
+                        <div class="order-summary clearfix">
+                            <div class="section-title">
+                                <h4 class="title">Shopcart Product List</h4>
+                            </div>
+                            <table class="shopping-cart-table table">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Product</th>
+                                    <th class="text-center">Price</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-right"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for rs in shopcart %}
+                                <tr>
+                                    <td class="thumb" >
+                                        {% if rs.variant.image_id > 0 %}
+                                        <img alt="" src="{{rs.variant.image }}"
+                                             style="height: 50px; width:50px; object-fit: cover; margin-right:10px;">
+                                        {% else %}
+                                        <img alt="" src="{{rs.product.image.url}}"
+                                             style="height: 50px; width:50px; object-fit: cover; margin-right:10px;">
+                                        {% endif %}
+
+                                    </td>
+                                    <td class="details">
+                                        <a href="/product/{{ rs.product.id }}/{{ rs.product.slug }}"><h5>
+                                            {{rs.product}} </h5>
+                                            {% if rs.variant.size != None and rs.variant.color != None %}<h6> Size: {{ rs.variant.size }} | Color: {{ rs.variant.color }} {% endif %}</h6>
+                                            {% if rs.variant.size != None and rs.variant.color == None %}<h6> Size: {{ rs.variant.size }} {% endif %}</h6>
+                                            {% if rs.variant.size == None and rs.variant.color != None %}<h6> Color: {{ rs.variant.color }} {% endif %}</h6></a></td>
+                                    <td class="price text-center"><strong><h5>
+                                        {% for dp in discountP %}
+											{% if dp.product_id == rs.product_id and dp.variant_id == rs.variant_id %}
+										<del class="product-old-price" style="color:#F8694A;">
+											{% else %}
+											<span>
+												{% endif %}
+												{% endfor %}
+
+											₹{% if rs.variant != None %}{{ rs.variant.price }}{% else %}{{ rs.product.price }}{% endif %}
+										</del>
+										{% for dp in discountP %}
+											{% if dp.product_id == rs.product_id and dp.variant_id == rs.variant_id %}
+										<span><br> &nbsp; ₹{{ dp.DiscountPrice }}
+
+										</span>
+										{% endif %}
+										{% endfor %}</h5>
+                                    </strong></td>
+                                    <td class="qty text-center"><strong><h5>X {{rs.quantity}}</h5></strong></td>
+                                    <td class="total text-center"><strong style="color:#000000;">
+                                        {% for dp in discountP %}
+											{% if dp.product_id == rs.product_id and dp.variant_id == rs.variant_id %}
+										<del class="product-old-price" style="color:#F8694A;">
+											{% else %}
+											<span>
+												{% endif %}
+												{% endfor %}
+
+											₹{% if rs.variant != None %}{{ rs.variant.price|mul:rs.quantity }}{% else %}{{ rs.product.price|mul:rs.quantity }}{% endif %}
+										</del>
+										{% for dp in discountP %}
+											{% if dp.product_id == rs.product_id and dp.variant_id == rs.variant_id %}
+										<span> <br>&nbsp; ₹{{ dp.DiscountPrice|mul:rs.quantity }}
+
+										</span>
+										{% endif %}
+										{% endfor %}
+                                    </strong></td>
+                                    <td class="text-right"><a class="main-btn icon-btn"
+                                                              href="/order/deletefromcart/{{ rs.id }}"
+                                                              onclick="return confirm('Delete ! Are you sure?')"><i class="fa fa-close"></i></a>
+                                    </td>
+                                </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                            <th class="empty" colspan="2"></th>
+                            <th>SUBTOTAL</th>
+                            <th class="sub-total" colspan="3" style="text-align:right;"><h4>
+                               {% if discountlessTotal != total %} <del style="color:#F8694A;">₹{{ discountlessTotal }}</del>{% endif %}<br>₹{{ total }}</h4></th>
+
+                        </tr>
+                        <tr>
+                            <th class="empty" colspan="2"></th>
+                            <th>SHIPPING</th>
+                            <td colspan="3"><h4 class="pull-right">Free Shipping</h4></td>
+                        </tr>
+
+                        <tr>
+                            <th class="empty" colspan="2"></th>
+                            <th>SUBSCRIPTION DISCOUNT</th>
+                            <td colspan="3" ><h4 class="pull-right">- ₹{{ priceOff }}</h4></td>
+                        </tr>
+
+                        <tr>
+                            <th class="empty" colspan="2"></th>
+                            <th>TOTAL</th>
+                            <th style="text-align:right;" class="total" colspan="3"><h3 style="color:#F8694A;">₹{{ totalprice }}</h3>
+                            {% if discountlessTotal != totalprice %}
+                                <p style="font-size:15px;">You saved ₹{{ discountlessTotal|sub:totalprice }}
+                                {% endif %}</p>
+                            </th>
+                        </tr>
+
+                        <tr>
+                            <th class="empty" colspan="2"></th>
+                            <th>
+                                <label for="id_useWallet"></label>
+                                <input name="useWallet" id="id_useWallet" class="applyWalletRadio" type="radio" value=""><span>Apply Wallet?</span></th>
+                            <td colspan="3" >
+                                <h4 class="pull-right" id="walletInfo" style="display:none;">
+                                    {% if totalprice <= applyWalletInfo.cashBackTotal %}
+                                    {{ totalprice|floatformat:-2 }}
+                                    {% else %}
+                                    - ₹{{ applyWalletInfo.cashBackTotal|floatformat:-2 }}
+                                {% endif %}
+                                </h4>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th class="empty" colspan="2"></th>
+                            <th>YOU HAVE TO PAY</th>
+                            <th style="text-align:right; " class="total" colspan="3">
+                            <h3 id="finalTotal" style="color:#F8694A;">₹{{ totalprice }}</h3>
+
+
+                            <h3 id="finalWalletTotal" style="color:#F8694A; display:none;">
+                                {% if totalprice <= applyWalletInfo.cashBackTotal %}
+                                    ₹0.00
+                                {% else %}
+                                ₹{{ totalprice|sub:applyWalletInfo.cashBackTotal|floatformat:-2 }}
+                                {% endif %}
+                            </h3>
+                            </th>
+                        </tr>
+
+
+
+                                </tfoot>
+                            </table>
+
+                        </div>
+                        <div class="pull-right">
+                            <button class="primary-btn" type="submit">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+
+            </Form>
+
+
+
+
+            {% if couponInfo == None or couponInfo == False or couponInfo == 'expired' or couponInfo == 'Limit Exceeded' %}
+            <form action="/order/orderproduct/" method="get" style="position: relative; top:-90px;">
+                {% csrf_token %}
+                <div class="col-md-5 col-xs-4">
+                    <div class="billing-details pull-left">
+
+                        <div style="display: inline-block;">
+
+                            <p><label for="id_couponCode">COUPON:</label></p>
+                            <input class="input center" id="id_couponCode" name="couponCode" type="text" placeholder="Enter Coupon Code">
+                        </div>
+                        <div style="display: inline-block;">
+                        <button type="submit" class="primary-btn" style="display: inline-block;">Apply</button>
+                        </div>
+                        {% if couponInfo == False %}<p style="color:red;">Wrong Code</p>{% endif %}
+                        {% if couponInfo == 'expired' %}<p style="color:red;">Expired</p>{% endif %}
+                        {% if couponInfo == 'Limit Exceeded' %}<p style="color:red;">Oops!!! Limit is exceeded</p>{% endif %}
+
+
+                    </div>
+                </div>
+
+            </form>
+            <!--/*% elif couponInfo == False %}
+                ////Wrong Code */-->
+
+            {% else %}
+            <div class="col-md-5 col-xs-3" style="position: relative; top:-80px;">
+                    <div class="billing-details pull-left">
+
+                        <div style="display: inline-block;">
+                            <p style="color:green;"><label for="id_first_name">COUPON: {{ couponInfo.code }} is applied</label></p>
+                            <p>After successful transaction you will recieve
+                                {% if couponInfo.cashBackLimit <= totalprice|mul:couponInfo.cashBackPercent|div:100 %}
+                                    ₹{{ couponInfo.cashBackLimit }}
+                                {% else %}
+                                    ₹{{ totalprice|mul:couponInfo.cashBackPercent|div:100|stringformat:".2f" }}
+                                {% endif %}
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+            {% endif %}
+
+
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /section -->
+
+
+<script>
+
+    const radios = Array.from(document.getElementsByClassName('applyWalletRadio'))
+
+for(let i of radios) {
+    i.state = false
+
+    i.onclick = () => {
+        i.checked = i.state = !i.state
+
+        if(i.state){
+        document.getElementById("walletInfo").style.display ="block";
+        document.getElementById("finalWalletTotal").style.display ="block";
+        document.getElementById("finalTotal").style.display ="none";
+        i.value = true;
+        }
+
+        else{
+        document.getElementById("walletInfo").style.display ="none";
+        document.getElementById("finalWalletTotal").style.display ="none";
+        document.getElementById("finalTotal").style.display ="block";
+        i.value = false;
+
+        }
+
+        for(let j of radios)
+            if(j !== i){
+             j.checked = j.state = false
+             j.value = j.state = false
+
+             }
+    }
+}
+
+
+
+
+
+
+</script>
+{% endblock %}
+
